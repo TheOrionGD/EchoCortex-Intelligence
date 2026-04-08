@@ -1,0 +1,192 @@
+# File Tree: Echo
+
+**Generated:** 3/3/2026, 11:26:37 AM
+**Root Path:** `e:\PROJECTS\Echo`
+
+```
+├── 📁 backend
+│   ├── 📁 config
+│   │   ├── 📄 database.ts
+│   │   └── 📄 gemini.ts
+│   ├── 📁 controllers
+│   │   └── 📄 meetings.controller.ts
+│   ├── 📁 migrations
+│   │   └── 📄 001_create_firebase_config.sql
+│   ├── 📁 routes
+│   │   ├── 📄 admin.routes.ts
+│   │   ├── 📄 meetings.routes.ts
+│   │   └── 📄 search.routes.ts
+│   ├── 📁 src
+│   │   ├── 📁 bootstrap
+│   │   │   └── 📄 index.ts
+│   │   ├── 📁 config
+│   │   │   ├── 📄 database.ts
+│   │   │   ├── 📄 firebase.ts
+│   │   │   └── 📄 gemini.ts
+│   │   ├── 📁 controllers
+│   │   │   ├── 📄 admin.controller.ts
+│   │   │   ├── 📄 config.controller.ts
+│   │   │   ├── 📄 logs.controller.ts
+│   │   │   ├── 📄 meetings.controller.ts
+│   │   │   ├── 📄 search.controller.ts
+│   │   │   └── 📄 transcript.controller.ts
+│   │   ├── 📁 jobs
+│   │   │   ├── 📄 generateEmbeddings.job.ts
+│   │   │   └── 📄 processAudio.job.ts
+│   │   ├── 📁 middleware
+│   │   │   ├── 📄 auth.middleware.ts
+│   │   │   └── 📄 role.middleware.ts
+│   │   ├── 📁 routes
+│   │   │   ├── 📄 admin.routes.ts
+│   │   │   ├── 📄 config.routes.ts
+│   │   │   ├── 📄 logs.routes.ts
+│   │   │   ├── 📄 meetings.routes.ts
+│   │   │   ├── 📄 search.routes.ts
+│   │   │   └── 📄 transcript.routes.ts
+│   │   ├── 📁 services
+│   │   │   ├── 📄 embedding.service.ts
+│   │   │   ├── 📄 extraction.service.ts
+│   │   │   ├── 📄 semanticSearch.service.ts
+│   │   │   └── 📄 transcription.service.ts
+│   │   ├── 📁 types
+│   │   │   ├── 📄 auth.ts
+│   │   │   ├── 📄 embedding.ts
+│   │   │   └── 📄 meeting.ts
+│   │   └── 📁 utils
+│   │       ├── 📄 logger.ts
+│   │       └── 📄 validators.ts
+│   ├── 📄 index.ts
+│   ├── ⚙️ package-lock.json
+│   ├── ⚙️ package.json
+│   └── ⚙️ tsconfig.json
+├── 📁 components
+│   ├── 📁 audio
+│   │   ├── 📄 AudioPlayer.tsx
+│   │   ├── 📄 AudioRecorder.tsx
+│   │   └── 📄 Waveform.tsx
+│   ├── 📁 landing
+│   │   ├── 📄 Features.tsx
+│   │   ├── 📄 Footer.tsx
+│   │   ├── 📄 Header.tsx
+│   │   └── 📄 Hero.tsx
+│   ├── 📁 layout
+│   │   ├── 📄 Header.tsx
+│   │   ├── 📄 PageShell.tsx
+│   │   └── 📄 Sidebar.tsx
+│   ├── 📁 search
+│   │   ├── 📄 SearchResultItem.tsx
+│   │   └── 📄 SemanticSearchBar.tsx
+│   ├── 📁 transcript
+│   │   ├── 📄 Timestamp.tsx
+│   │   ├── 📄 TranscriptLine.tsx
+│   │   └── 📄 TranscriptTimeline.tsx
+│   ├── 📁 ui
+│   │   ├── 📄 Badge.tsx
+│   │   ├── 📄 Button.tsx
+│   │   ├── 📄 Input.tsx
+│   │   └── 📄 Loader.tsx
+│   ├── 📄 Recorder.tsx
+│   └── 📄 Timeline.tsx
+├── 📁 constants
+│   └── 📄 branding.ts
+├── 📁 context
+│   ├── 📄 AuthContext.tsx
+│   ├── 📄 TeamContext.tsx
+│   └── 📄 ThemeContext.tsx
+├── 📁 docs
+│   ├── 📝 api-spec.md
+│   ├── 📝 architecture.md
+│   ├── 📝 data-flow.md
+│   ├── 📝 threat-model.md
+│   └── 📝 ui-guidelines.md
+├── 📁 entry
+│   └── 📄 main.tsx
+├── 📁 frontend
+│   └── 📁 src
+│       ├── 📁 components
+│       │   ├── 📁 audio
+│       │   │   ├── 📄 AudioPlayer.tsx
+│       │   │   ├── 📄 AudioRecorder.tsx
+│       │   │   └── 📄 Waveform.tsx
+│       │   ├── 📁 layout
+│       │   │   ├── 📄 Header.tsx
+│       │   │   ├── 📄 PageShell.tsx
+│       │   │   └── 📄 Sidebar.tsx
+│       │   ├── 📁 search
+│       │   │   ├── 📄 SearchResultItem.tsx
+│       │   │   └── 📄 SemanticSearchBar.tsx
+│       │   ├── 📁 transcript
+│       │   │   ├── 📄 Timestamp.tsx
+│       │   │   ├── 📄 TranscriptLine.tsx
+│       │   │   └── 📄 TranscriptTimeline.tsx
+│       │   └── 📁 ui
+│       │       ├── 📄 Badge.tsx
+│       │       ├── 📄 Button.tsx
+│       │       └── 📄 Input.tsx
+│       ├── 📁 context
+│       │   ├── 📄 AuthContext.tsx
+│       │   └── 📄 TeamContext.tsx
+│       ├── 📁 entry
+│       │   └── 📄 main.tsx
+│       ├── 📁 services
+│       │   └── 📄 geminiService.ts
+│       ├── 📁 types
+│       │   ├── 📄 meeting.ts
+│       │   ├── 📄 transcript.ts
+│       │   └── 📄 user.ts
+│       └── 📄 types.ts
+├── 📁 hooks
+│   ├── 📄 useAuth.ts
+│   ├── 📄 useLogger.ts
+│   └── 📄 useSemanticSearch.ts
+├── 📁 pages
+│   ├── 📄 ActionsDecisions.tsx
+│   ├── 📄 Admin.tsx
+│   ├── 📄 CreateMeeting.tsx
+│   ├── 📄 Dashboard.tsx
+│   ├── 📄 Intelligence.tsx
+│   ├── 📄 Landing.tsx
+│   ├── 📄 LandingPage.tsx
+│   ├── 📄 Login.tsx
+│   ├── 📄 MeetingDetail.tsx
+│   ├── 📄 Profile.tsx
+│   ├── 📄 Search.tsx
+│   └── 📄 SemanticSearch.tsx
+├── 📁 services
+│   ├── 📄 firebase.ts
+│   └── 📄 geminiService.ts
+├── 📁 types
+│   ├── 📄 meeting.ts
+│   ├── 📄 transcript.ts
+│   └── 📄 user.ts
+├── 📁 utils
+│   ├── 📄 apiLogger.ts
+│   ├── 📄 eventLogger.ts
+│   ├── 📄 formatTime.ts
+│   └── 📄 logger.ts
+├── ⚙️ .gitignore
+├── 📄 App.tsx
+├── 📝 DATABASE_CONFIG_SETUP.md
+├── 📝 DATABASE_CONNECTION_SETUP.md
+├── 📝 DATABASE_ONLY_POLICY.md
+├── 📝 LOGGING_INTEGRATION_GUIDE.md
+├── 📄 PROJECT_REPORT.txt
+├── 📝 README.md
+├── 📝 SUPABASE_MAINTENANCE.md
+├── 📄 SUPABASE_SETUP.sql
+├── 📝 THEME_CONTEXT_CITATIONS.md
+├── 🌐 index.html
+├── 📄 index.tsx
+├── 📄 installation files.txt
+├── ⚙️ metadata.json
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+├── 📄 requirements.txt
+├── 📄 structure.txt
+├── ⚙️ tsconfig.json
+├── 📄 types.ts
+└── 📄 vite.config.ts
+```
+
+---
+*Generated by FileTree Pro Extension*

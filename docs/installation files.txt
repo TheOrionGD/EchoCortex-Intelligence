@@ -1,0 +1,13 @@
+📦 Frontend installs (project root)
+npm install react react-dom react-router-dom firebase lucide-react @google/genai
+npm install -D vite typescript @types/react @types/react-dom @vitejs/plugin-react
+
+📦 Backend installs (/backend)
+npm install express cors dotenv @google/genai
+npm install -D typescript ts-node @types/node @types/express @types/cors
+
+npm install express cors dotenv
+npm install -D typescript ts-node-dev @types/node @types/express
+
+npm install --save-dev @types/cors
+npm install --save-dev @types/pg

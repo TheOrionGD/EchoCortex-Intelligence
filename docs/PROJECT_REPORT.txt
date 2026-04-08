@@ -1,0 +1,76 @@
+================================================================================
+PROJECT REPORT: ECHO INSTITUTIONAL MEMORY SYSTEM (AUTOMATED SECOND BRAIN)
+================================================================================
+
+1. EXECUTIVE SUMMARY
+--------------------
+Echo is a next-generation "Second Brain" platform designed for organizational 
+memory preservation. Unlike standard transcription tools, Echo treats spoken 
+dialogue as raw data, converting it into a queryable, relational knowledge graph. 
+By utilizing the Gemini 3 series models, Echo extracts not just text, but 
+institutional intent, commitments (Action Items), and consensus (Decisions).
+
+2. SYSTEM ARCHITECTURE
+----------------------
+Echo employs a decoupled full-stack architecture optimized for high-fidelity 
+audio processing and semantic retrieval.
+
+A. Frontend (Institutional Interface):
+   - Framework: React 19.
+   - Styling: Tailwind CSS (Obsidian/Stark Theme).
+   - State Management: Context API (Auth, Team, Navigation).
+   - Visualization: Real-time waveform analysis and chronological data streams.
+
+B. Intelligence Core (Echo Cortex):
+   - Engine: Google Gemini API.
+   - Models: 
+     - Extraction: 'gemini-3-pro-preview' for complex relational mapping.
+     - Recall: 'gemini-3-flash-preview' for low-latency semantic search.
+   - Data Structures: Relational segments mapped to vector embeddings (simulated).
+
+3. INTELLIGENCE PIPELINE (THE CORTEX)
+-------------------------------------
+The system follows a strict 4-step ingestion pipeline:
+
+Step 1: Artifact Ingestion
+Raw audio data is streamed or uploaded (audio/webm, audio/pcm) and converted to 
+base64 for transmission to the neural engine.
+
+Step 2: Relational Extraction
+The Gemini 3 Pro model analyzes the audio to generate:
+- Speaker-labeled transcript segments with micro-second timestamps.
+- Action Items: Explicit commitments linked to specific segments.
+- Decisions: Finalized outcomes with linguistic confidence scores.
+
+Step 3: Vector Mapping
+Extracted segments are indexed into a simulated vector space. Each segment 
+receives a unique node identifier within the institutional repository.
+
+Step 4: Semantic Recall
+The Recall Engine uses vector-similarity simulation to allow users to query 
+"intent" rather than just keywords.
+
+4. CORE FEATURES
+----------------
+- Truth Matrix: A dedicated dashboard for tracking system-wide decisions.
+- Committed Nodes: Responsibility matrix for tracking personnel action items.
+- Recall Engine: Semantic search that understands the context of past meetings.
+- Institutional Governance: Role-based access control (Admin/Member) and system 
+  architecture visualization.
+
+5. DESIGN PHILOSOPHY
+--------------------
+- Endurance: The UI is designed to reduce cognitive load during long research sessions.
+- Clarity: Monospaced typography and high-contrast visuals prioritize data over decoration.
+- Security: "Institutional Core" branding emphasizes that data belongs to the organization.
+
+6. TECHNICAL SPECIFICATIONS
+---------------------------
+- Language: TypeScript (Strict mode).
+- Audio Encoding: Raw PCM/WebM 16bit.
+- Semantic Score: Normalized similarity (0.0 - 1.0).
+- Latency: Optimized for <2s intelligence extraction on 5-minute segments.
+
+================================================================================
+END OF REPORT
+================================================================================

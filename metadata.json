@@ -1,0 +1,7 @@
+{
+  "name": "Echo - Automated Second Brain",
+  "description": "An AI-augmented meeting intelligence platform that converts raw meeting audio into a structured, queryable relational knowledge graph with semantic search and automated action item extraction.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

@@ -1,0 +1,42 @@
+# ====================================================== 
+# Echo – Automated Second Brain
+# Dependency Manifest (Node.js / TypeScript)
+# This file documents dependencies by path.
+# Installation is handled via npm, not pip.
+# ======================================================
+
+
+# -----------------------------
+# FRONTEND (Root /)
+# -----------------------------
+# Path: /
+react@19.2.4
+react-dom@19.2.4
+react-router-dom@6.30.3
+firebase@12.8.0
+lucide-react@0.563.0
+@google/genai@1.38.0
+
+# Dev Dependencies (Frontend)
+vite
+typescript
+@types/react
+@types/react-dom
+@vitejs/plugin-react
+
+
+# -----------------------------
+# BACKEND (backend/)
+# -----------------------------
+# Path: backend/
+express
+cors
+dotenv
+@google/genai
+
+# Dev Dependencies (Backend)
+typescript
+ts-node
+@types/node
+@types/express
+@types/cors

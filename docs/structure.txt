@@ -1,0 +1,152 @@
+echo/
+├── .env                           # Local environment secrets
+├── .env.local                     # Local-only environment overrides
+├── .gitignore                     # Version control exclusions
+├── App.tsx                        # Main Application component (Root)
+├── index.html                     # Entry HTML document with importmap
+├── index.tsx                      # Client-side entry point
+├── metadata.json                  # App manifest & permissions
+├── package.json                   # Frontend dependencies
+├── package-lock.json              # Dependency lock file
+├── PROJECT_REPORT.txt             # Institutional system report
+├── README.md                      # Project documentation
+├── requirements.txt               # Python/Backend dependencies
+├── structure.txt                  # System directory mapping
+├── tsconfig.json                  # TypeScript configuration
+├── types.ts                       # Root type exports
+├── vite.config.ts                 # Vite bundler configuration
+├── LOGGING_INTEGRATION_GUIDE.ts   # Frontend logging system guide
+├── installation files.txt         # Installation instructions
+│
+├── components/                    # UI Component Library
+│   ├── Recorder.tsx               # Legacy audio capture
+│   ├── Timeline.tsx               # Legacy transcript view
+│   ├── audio/                     # Audio processing UI
+│   │   ├── AudioPlayer.tsx        # Playback controls
+│   │   ├── AudioRecorder.tsx      # Neural ingestion interface
+│   │   └── Waveform.tsx           # Signal visualization
+│   ├── landing/                   # Landing page components
+│   │   ├── Features.tsx           # Feature showcase
+│   │   ├── Footer.tsx             # Footer section
+│   │   ├── Header.tsx             # Hero header
+│   │   └── Hero.tsx               # Hero section
+│   ├── layout/                    # Structural components
+│   │   ├── Header.tsx             # Page titles & actions
+│   │   ├── PageShell.tsx          # Animated page wrapper
+│   │   └── Sidebar.tsx            # Institutional navigation
+│   ├── search/                    # Semantic retrieval UI
+│   │   ├── SearchResultItem.tsx   # Individual result display
+│   │   └── SemanticSearchBar.tsx  # Search input & controls
+│   ├── transcript/                # Transcript visualization
+│   │   ├── Timestamp.tsx          # Timestamp display
+│   │   ├── TranscriptLine.tsx     # Individual transcript line
+│   │   └── TranscriptTimeline.tsx # Timeline container
+│   └── ui/                        # Primitive design tokens
+│       ├── Badge.tsx              # Status badge component
+│       ├── Button.tsx             # Button component
+│       ├── Input.tsx              # Input field component
+│       └── Loader.tsx             # Loading spinner component
+│
+├── constants/                     # Application constants
+│   └── branding.ts                # Brand colors & metadata
+│
+├── context/                       # State Management
+│   ├── AuthContext.tsx            # Identity & Session state
+│   └── TeamContext.tsx            # Institutional metadata context
+│
+├── docs/                          # Documentation
+│   ├── api-spec.md                # API specification
+│   ├── architecture.md            # System architecture
+│   ├── data-flow.md               # Data flow diagram & docs
+│   ├── threat-model.md            # Security threat analysis
+│   └── ui-guidelines.md           # UI design guidelines
+│
+├── entry/                         # Entry point abstractions
+│   └── main.tsx                   # Application entry setup
+│
+├── frontend/                      # Frontend-specific setup (if needed)
+│   └── src/                       # Frontend source (optional structure)
+│
+├── hooks/                         # Functional abstractions & Hooks
+│   ├── useAuth.ts                 # Authentication logic hook
+│   ├── useLogger.ts               # Logging integration hook (NEW)
+│   └── useSemanticSearch.ts       # Recall engine logic hook
+│
+├── pages/                         # View controllers
+│   ├── ActionsDecisions.tsx       # Relational intelligence view
+│   ├── Admin.tsx                  # Architecture governance
+│   ├── CreateMeeting.tsx          # Ingestion setup form
+│   ├── Dashboard.tsx              # Artifact repository view
+│   ├── Intelligence.tsx           # Truth Matrix / Decisions view
+│   ├── Landing.tsx                # Landing page (alternate)
+│   ├── LandingPage.tsx            # Landing page (primary)
+│   ├── Login.tsx                  # Identity authentication
+│   ├── MeetingDetail.tsx          # Deep-dive analysis view
+│   ├── Profile.tsx                # Personnel node config
+│   ├── Search.tsx                 # Recall engine interface
+│   └── SemanticSearch.tsx         # Semantic retrieval view
+│
+├── services/                      # External integrations
+│   ├── firebase.ts                # Firebase infrastructure config
+│   └── geminiService.ts           # Echo Cortex (Gemini API)
+│
+├── types/                         # Domain models
+│   ├── meeting.ts                 # Relational artifact models
+│   ├── transcript.ts              # Chronological data models
+│   └── user.ts                    # Personnel schemas
+│
+├── utils/                         # Shared utilities & Logging
+│   ├── apiLogger.ts               # API request logging (NEW)
+│   ├── eventLogger.ts             # User event tracking (NEW)
+│   ├── formatTime.ts              # Temporal formatting
+│   └── logger.ts                  # Core logging system (NEW)
+│
+└── backend/                       # Intelligence Pipeline (Node.js)
+    ├── index.ts                   # Express server entry
+    ├── package.json               # Backend dependencies
+    ├── package-lock.json          # Backend dependency lock
+    ├── tsconfig.json              # Backend TypeScript config
+    ├── config/                    # Pipeline configuration
+    │   └── gemini.ts              # Cortex initialization
+    ├── controllers/               # Logic handlers (legacy)
+    │   └── meetings.controller.ts # Meeting controller
+    ├── routes/                    # API endpoint definitions (legacy)
+    │   ├── admin.routes.ts        # Admin endpoints
+    │   ├── meetings.routes.ts     # Meeting endpoints
+    │   └── search.routes.ts       # Search endpoints
+    │
+    └── src/                       # Refactored pipeline source
+        ├── bootstrap/             # Server initialization
+        │   └── index.ts           # Bootstrap entry
+        ├── config/                # Cortex settings
+        │   ├── database.ts        # Database configuration
+        │   ├── firebase.ts        # Firebase setup
+        │   └── gemini.ts          # Gemini AI configuration
+        ├── controllers/           # Service controllers
+        │   ├── admin.controller.ts
+        │   ├── meetings.controller.ts
+        │   ├── search.controller.ts
+        │   └── transcript.controller.ts
+        ├── jobs/                  # Async task definitions
+        │   ├── generateEmbeddings.job.ts
+        │   └── processAudio.job.ts
+        ├── middleware/            # Security & Validation
+        │   ├── auth.middleware.ts
+        │   └── role.middleware.ts
+        ├── routes/                # Versioned endpoints
+        │   ├── admin.routes.ts
+        │   ├── meetings.routes.ts
+        │   ├── search.routes.ts
+        │   └── transcript.routes.ts
+        ├── services/              # Extraction & Recall engines
+        │   ├── embedding.service.ts
+        │   ├── extraction.service.ts
+        │   ├── semanticSearch.service.ts
+        │   └── transcription.service.ts
+        ├── types/                 # Backend-specific models
+        │   ├── auth.ts
+        │   ├── embedding.ts
+        │   └── meeting.ts
+        └── utils/                 # Audit & Validation logging
+            ├── logger.ts          # Backend logging utility
+            └── validators.ts      # Input validation utilities
