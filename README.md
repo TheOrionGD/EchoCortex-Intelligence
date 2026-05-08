@@ -1,11 +1,25 @@
 # Echo — Institutional Memory System
 
 [![Theme: Obsidian Stark](https://img.shields.io/badge/Theme-Obsidian%20Stark-black.svg?style=flat-square)](#design-system-and-aesthetics)
-[![Engine: Echo Cortex](https://img.shields.io/badge/Cortex-Gemini%203%20Pro-blueviolet.svg?style=flat-square)](#intelligence-layer-echo-cortex)
+[![Engine: Echo Cortex](https://img.shields.io/badge/Cortex-Gemini%201.5%20Pro-blueviolet.svg?style=flat-square)](#intelligence-layer-echo-cortex)
 [![STT: Hugging Face Whisper](https://img.shields.io/badge/STT-Whisper%20Large%20v3-orange.svg?style=flat-square)](#stt--embeddings-pipeline)
-[![LLM: Groq Llama 3.1](https://img.shields.io/badge/LLM-Llama%203.1--8b-emerald.svg?style=flat-square)](#analysis-layer-groq)
-[![Database: MongoDB & Supabase](https://img.shields.io/badge/Database-PostgreSQL%20%26%20MongoDB-cyan.svg?style=flat-square)](#hybrid-storage-layer)
-[![Build Status](https://img.shields.io/badge/Status-Production--Ready-brightgreen.svg?style=flat-square)](#production-deployment)
+[![LLM Ingestion: Llama 3.1](https://img.shields.io/badge/LLM-Llama%203.1--8b%20(Groq)-emerald.svg?style=flat-square)](#analysis-layer-groq)
+[![Database: MongoDB Atlas](https://img.shields.io/badge/NoSQL-MongoDB%20Atlas-forestgreen.svg?style=flat-square)](#hybrid-storage-layer)
+[![Database: Supabase Postgres](https://img.shields.io/badge/RDBMS-Supabase%20Postgres-darkcyan.svg?style=flat-square)](#hybrid-storage-layer)
+[![Frontend Core: React 19](https://img.shields.io/badge/Frontend-React%2019-blue.svg?style=flat-square)](#frontend-architecture-client-side)
+[![Styles & UI: Vanilla CSS](https://img.shields.io/badge/Styles-Vanilla%20CSS-rebeccapurple.svg?style=flat-square)](#design-system-and-aesthetics)
+[![3D Engine: Three.js](https://img.shields.io/badge/3D%20Engine-Three.js-yellowgreen.svg?style=flat-square)](#frontend-architecture-client-side)
+[![Build Tool: Vite Client](https://img.shields.io/badge/Build-Vite%20Client-646CFF.svg?style=flat-square)](#frontend-architecture-client-side)
+[![Runtime: Node.js 18+](https://img.shields.io/badge/Runtime-Node.js%2018%2B-339933.svg?style=flat-square)](#backend-architecture-cortex-server)
+[![Server Framework: Express](https://img.shields.io/badge/Server-Express.js-000000.svg?style=flat-square)](#backend-architecture-cortex-server)
+[![Language Standards: TS 5](https://img.shields.io/badge/Language-TypeScript%205-3178C6.svg?style=flat-square)](#tech-stack--core-dependencies)
+[![Compliance: SHA-256 Ledger](https://img.shields.io/badge/Compliance-SHA--256%20Ledger-crimson.svg?style=flat-square)](#4-compliance-vault-the-vault)
+[![Telemetry: Groq Dial](https://img.shields.io/badge/Telemetry-Groq%20Dial-magenta.svg?style=flat-square)](#4-compliance-vault-the-vault)
+[![Module 1: Strategic Analytics](https://img.shields.io/badge/Analytics-Strategic%20Dashboard-navy.svg?style=flat-square)](#1-strategic-analytics-enterprise-dashboard)
+[![Module 2: Delta Audit](https://img.shields.io/badge/Audit-Delta%20Comparison-purple.svg?style=flat-square)](#2-delta-audit-selective-session-comparison)
+[![Module 3: Entity Graph](https://img.shields.io/badge/Directory-Entity%20Graph-teal.svg?style=flat-square)](#3-entity-graph-neural-directory)
+[![Module 4: Compliance Vault](https://img.shields.io/badge/Governance-Compliance%20Vault-darkgreen.svg?style=flat-square)](#4-compliance-vault-the-vault)
+[![Module 5: Synapse Hub](https://img.shields.io/badge/Integrations-Synapse%20Hub-orangered.svg?style=flat-square)](#5-synapse-hub-external-connectors--support)
 
 Echo is an enterprise-grade **Decentralized Intelligence Platform** and **Automated Second Brain** designed for long-term organizational endurance. It ingests spoken sessions, files, and text reports, converting them into a structured, queryable relational knowledge graph.
 
