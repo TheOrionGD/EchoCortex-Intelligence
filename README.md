@@ -298,8 +298,8 @@ CREATE TABLE firebase_config (
 INSERT INTO firebase_config (
   api_key, auth_domain, project_id, storage_bucket, messaging_sender_id, app_id, active
 ) VALUES (
-  'AIzaSyB8b...', 'echo-institutional.firebaseapp.com', 'echo-institutional', 
-  'echo-institutional.appspot.com', '402414766279', '1:402414766279:web:2ea3f7b453', true
+  'AIz*\*', '**.firebaseapp.com', '**', 
+  '**.appspot.com', '**', '1:**:web:**', true
 );
 ```
 
