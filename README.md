@@ -1,4 +1,4 @@
-# Echo — Institutional Memory System
+# Echo Cortex — Institutional Memory System
 
 [![Theme: Obsidian Stark](https://img.shields.io/badge/Theme-Obsidian%20Stark-black.svg?style=flat-square)](#design-system-and-aesthetics)
 [![Engine: Echo Cortex](https://img.shields.io/badge/Cortex-Gemini%201.5%20Pro-blueviolet.svg?style=flat-square)](#intelligence-layer-echo-cortex)
