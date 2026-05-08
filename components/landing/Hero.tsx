@@ -1,112 +1,179 @@
 import React from 'react';
-import { ArrowRight, Zap } from 'lucide-react';
-import { Button } from '../ui/Button.tsx';
+import { ArrowRight, Cpu, Network, BrainCircuit } from 'lucide-react';
 
 interface HeroProps {
   onNavigate: (path: string) => void;
 }
 
+// ─── Tech Stack Badge ─────────────────────────────────────────────────────────
+const TechBadge: React.FC<{ label: string; accent?: boolean; violet?: boolean }> = ({
+  label, accent, violet
+}) => (
+  <div
+    className={`
+      flex items-center gap-2 px-4 py-2 rounded-full border text-[10px] font-mono uppercase tracking-[0.25em]
+      backdrop-blur-md transition-all duration-300 hover:scale-105
+      ${accent
+        ? 'border-[#00FF41]/40 text-[#00FF41] bg-[#00FF41]/5 hover:border-[#00FF41]/70 hover:shadow-[0_0_20px_rgba(0,255,65,0.2)]'
+        : violet
+        ? 'border-[#8B5CF6]/40 text-[#8B5CF6] bg-[#8B5CF6]/5 hover:border-[#8B5CF6]/70 hover:shadow-[0_0_20px_rgba(139,92,246,0.2)]'
+        : 'border-white/15 text-[#A3A3A3] bg-white/5 hover:border-white/30 hover:text-white'
+      }
+    `}
+  >
+    {label}
+  </div>
+);
+
+// ─── Main Hero Section ────────────────────────────────────────────────────────
 export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
   return (
-    <section className="relative pt-48 pb-32 px-6 overflow-hidden min-h-[90vh] flex flex-col justify-center">
-      {/* Neural Soundscape Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        {/* Core Glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-accent/10 blur-[160px] rounded-full opacity-40 animate-pulse-slow"></div>
-        
-        {/* SVG Mesh Pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="neural-mesh" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1" fill="currentColor" className="text-accent" />
-              <path d="M 2 2 L 50 50 M 2 2 L 100 0" stroke="currentColor" strokeWidth="0.2" fill="none" className="text-accent/30" />
-            </pattern>
-            <linearGradient id="fade-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="white" stopOpacity="1" />
-              <stop offset="80%" stopColor="white" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="white" stopOpacity="0" />
-            </linearGradient>
-            <mask id="mesh-mask">
-              <rect width="100%" height="100%" fill="url(#fade-gradient)" />
-            </mask>
-          </defs>
-          
-          {/* Main Background Pattern */}
-          <rect width="100%" height="100%" fill="url(#neural-mesh)" mask="url(#mesh-mask)" />
-          
-          {/* Dynamic Nodes and Connections */}
-          <g className="animate-float" style={{ animationDuration: '20s' }}>
-            <circle cx="15%" cy="25%" r="2" fill="currentColor" className="text-accent animate-pulse" />
-            <circle cx="85%" cy="40%" r="1.5" fill="currentColor" className="text-accent animate-pulse" style={{ animationDelay: '1.5s' }} />
-            <circle cx="40%" cy="80%" r="2.5" fill="currentColor" className="text-accent animate-pulse" style={{ animationDelay: '3s' }} />
-            
-            <path d="M 15 250 L 850 400" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 8" fill="none" className="text-accent/20" />
-            <path d="M 850 400 L 400 800" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 8" fill="none" className="text-accent/20" />
-          </g>
-
-          {/* Sound Wave Ripple (Top Right) */}
-          <g className="text-accent/10" stroke="currentColor" fill="none">
-            <circle cx="90%" cy="10%" r="50" strokeWidth="1" />
-            <circle cx="90%" cy="10%" r="100" strokeWidth="0.5" />
-            <circle cx="90%" cy="10%" r="150" strokeWidth="0.2" />
-          </g>
-        </svg>
+    <section
+      id="hero"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-transparent"
+    >
+      {/* ── Deep Space Content-Specific Glows ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[10%] left-[20%] w-[600px] h-[600px] bg-[#8B5CF6]/4 rounded-full blur-[180px]" />
+        <div className="absolute top-[20%] right-[15%] w-[500px] h-[500px] bg-[#00FF41]/3 rounded-full blur-[160px]" />
       </div>
-      
-      <div className="max-w-5xl mx-auto text-center relative z-10 space-y-12">
-        <div className="inline-flex items-center gap-3 px-4 py-2 bg-zinc-900/50 border border-zinc-800 rounded-full mb-4 animate-in fade-in slide-in-from-top-4 duration-700 backdrop-blur-sm">
-          <Zap className="w-3 h-3 text-accent" />
-          <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-zinc-400">Powered by Gemini Cortex Engine</span>
+
+      {/* ── Telemetry Corner Data (JetBrains Mono) ── */}
+      <div className="absolute top-28 left-8 text-[9px] text-white/10 font-mono leading-6 pointer-events-none hidden xl:block" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+        <div>NODE_ID :: UNIT_PRIMARY</div>
+        <div>MONGODB_URI :: atlas.cluster0</div>
+        <div>PIPELINE :: 4-PHASE ACTIVE</div>
+        <div>HF_WHISPER :: LARGE-V3</div>
+        <div>GROQ_MODEL :: llama-3.1-8b</div>
+        <div>GEMINI :: 3-FLASH-PREVIEW</div>
+        <div>UPTIME :: 99.9%</div>
+      </div>
+      <div className="absolute top-28 right-8 text-right text-[9px] text-white/10 font-mono leading-6 pointer-events-none hidden xl:block" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+        <div>VECTOR_DIM :: 384</div>
+        <div>EMBED_MODEL :: MiniLM-L6-v2</div>
+        <div>PORT :: 2348 ACTIVE</div>
+        <div>MEETINGS_INDEXED :: ████</div>
+        <div>SEMANTIC_RECALL :: ONLINE</div>
+        <div>AUTH_METHOD :: MongoDB JWT</div>
+        <div>STATUS :: OPERATIONAL</div>
+      </div>
+
+      {/* ── Content ── */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 flex flex-col items-center text-center gap-10 pt-32 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+
+        {/* Infrastructure partners capsule */}
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center gap-4 px-6 py-3 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-xl shadow-inner">
+            <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-[#A3A3A3]">
+              Powered by Infrastructure Partners
+            </span>
+            <div className="flex items-center gap-3">
+              {/* CPU Icon */}
+              <div className="w-8 h-8 flex items-center justify-center rounded-md border border-white/10 bg-white/5">
+                <Cpu className="w-4 h-4 text-[#00FF41]" />
+              </div>
+              {/* Data Pipeline Icon */}
+              <div className="w-8 h-8 flex items-center justify-center rounded-md border border-white/10 bg-white/5">
+                <Network className="w-4 h-4 text-[#8B5CF6]" />
+              </div>
+              {/* Brain / Cortex */}
+              <div className="w-8 h-8 flex items-center justify-center rounded-md border border-white/10 bg-white/5">
+                <BrainCircuit className="w-4 h-4 text-[#00e5ff]" />
+              </div>
+            </div>
+          </div>
         </div>
-        
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-stark leading-[1.1] uppercase italic animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          Echo: Your AI Second Brain <br />
-          <span className="text-accent">for Professional Meetings</span>
+
+        {/* Main Headline */}
+        <h1
+          className="text-[clamp(2.8rem,7vw,6rem)] font-black uppercase tracking-tight text-white leading-[1.05]"
+          style={{ fontFamily: 'Inter, sans-serif' }}
+        >
+          Echo: Your Institutional
+          <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FF41] via-[#00e5ff] to-[#8B5CF6]">
+            Intelligence Hub
+          </span>
         </h1>
-        
-        <p className="text-xl md:text-2xl text-zinc-500 font-medium max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-          Capture, recall, and act on every decision effortlessly. Echo transforms spoken words into structured institutional intelligence.
+
+        {/* Sub-headline */}
+        <p
+          className="text-lg text-[#A3A3A3] max-w-2xl leading-relaxed"
+          style={{ fontFamily: 'Inter, sans-serif' }}
+        >
+          Transforming transient conversations into a structured, queryable relational knowledge graph.
+          Capture commitments, extract strategic decisions, and query your institutional memory with semantic precision.
         </p>
-        
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-          <Button variant="stark" size="lg" className="w-full sm:w-auto shadow-2xl" onClick={() => onNavigate('/login')}>
-            Get Started — Login <ArrowRight className="ml-3 w-4 h-4" />
-          </Button>
-          <button className="px-10 py-5 text-[11px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-stark transition-colors">
-            View Use Cases
+
+        {/* Tech Stack Badges */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <TechBadge label="Gemini 3 Pro" violet />
+          <TechBadge label="Whisper v3" accent />
+          <TechBadge label="Llama 3.1" violet />
+          <TechBadge label="MongoDB" accent />
+          <TechBadge label="Supabase" />
+        </div>
+
+        {/* Primary CTAs */}
+        <div className="flex flex-col sm:flex-row items-center gap-5">
+          {/* PRIMARY — Neon Green pulsing intelligence button */}
+          <button
+            id="cta-launch"
+            onClick={() => onNavigate('/login')}
+            className="relative group px-10 py-5 rounded-full text-[11px] font-black uppercase tracking-[0.4em] transition-all duration-300"
+            style={{
+              background: '#00FF41',
+              color: '#000',
+              boxShadow: '0 0 30px rgba(0,255,65,0.5), 0 0 60px rgba(0,255,65,0.25), 0 0 100px rgba(0,255,65,0.1)',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow =
+                '0 0 40px rgba(0,255,65,0.7), 0 0 80px rgba(0,255,65,0.4), 0 0 120px rgba(0,255,65,0.2)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow =
+                '0 0 30px rgba(0,255,65,0.5), 0 0 60px rgba(0,255,65,0.25), 0 0 100px rgba(0,255,65,0.1)';
+            }}
+          >
+            <span className="flex items-center gap-3">
+              <span
+                className="relative flex h-2 w-2"
+                style={{ animation: 'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite' }}
+              >
+                <span className="absolute inline-flex h-full w-full rounded-full bg-black opacity-75 animate-ping"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
+              </span>
+              Launch Echo Intelligence
+            </span>
+          </button>
+
+          {/* SECONDARY — Ghost outline button */}
+          <button
+            id="cta-knowledge-graph"
+            className="group px-10 py-5 rounded-full border border-white/20 text-white text-[11px] font-black uppercase tracking-[0.4em] backdrop-blur-md bg-white/5 hover:bg-white/10 hover:border-white/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] flex items-center gap-3"
+          >
+            View Knowledge Graph
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>
 
-      {/* Hero Visualizer Mockup */}
-      <div className="mt-32 max-w-6xl mx-auto px-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500">
-        <div className="bg-carbon border border-zinc-800 p-2 rounded-lg shadow-2xl relative">
-           <div className="absolute -top-12 -right-12 w-64 h-64 bg-accent/20 blur-[80px] rounded-full opacity-30"></div>
-           <div className="bg-obsidian rounded-md overflow-hidden border border-zinc-900 aspect-video flex flex-col">
-              <div className="h-10 bg-zinc-900/50 border-b border-zinc-900 flex items-center px-4 gap-2">
-                 <div className="w-2 h-2 rounded-full bg-red-500/30"></div>
-                 <div className="w-2 h-2 rounded-full bg-amber-500/30"></div>
-                 <div className="w-2 h-2 rounded-full bg-emerald-500/30"></div>
-                 <div className="ml-4 text-[9px] font-mono text-zinc-700 tracking-widest uppercase">system_log // interface_active</div>
-              </div>
-              <div className="flex-1 flex items-center justify-center relative bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.05)_0%,transparent_70%)]">
-                 <div className="flex items-end gap-1.5 h-32">
-                    {[...Array(40)].map((_, i) => (
-                      <div 
-                        key={i} 
-                        className="w-1.5 bg-accent/40 rounded-full animate-pulse" 
-                        style={{ 
-                          height: `${20 + Math.random() * 80}%`,
-                          animationDelay: `${i * 0.05}s`,
-                          animationDuration: '2s'
-                        }} 
-                      />
-                    ))}
-                 </div>
-              </div>
-           </div>
-        </div>
+      {/* ── Bottom secondary navigation ── */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-10 z-10">
+        <button className="text-[10px] font-mono uppercase tracking-[0.4em] text-[#A3A3A3] hover:text-white transition-colors duration-300 group">
+          <span className="border-b border-transparent group-hover:border-white/40 pb-0.5">View Use Cases</span>
+        </button>
+        <div className="w-px h-4 bg-white/10" />
+        <button className="text-[10px] font-mono uppercase tracking-[0.4em] text-[#A3A3A3] hover:text-white transition-colors duration-300 group">
+          <span className="border-b border-transparent group-hover:border-white/40 pb-0.5">Read Documentation</span>
+        </button>
       </div>
+
+      {/* ── Gradient fade-to-black at bottom ── */}
+      <div
+        className="absolute bottom-0 left-0 w-full h-40 pointer-events-none z-10"
+        style={{ background: 'linear-gradient(to bottom, transparent, #02040e)' }}
+      />
     </section>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Meeting, ViewState } from './types';
 import Sidebar from './components/layout/Sidebar';
-import { AuthProvider, useAuthContext } from './context/AuthContext';
+import { AuthProvider, useAuthContext } from './context/AuthContext.tsx';
 import { TeamProvider } from './context/TeamContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import LandingPage from './pages/LandingPage';
-import Login from './pages/Login';
+import Login from './pages/Login.tsx';
 import Dashboard from './pages/Dashboard';
 import CreateMeeting from './pages/CreateMeeting';
 import MeetingDetail from './pages/MeetingDetail';
@@ -13,8 +13,19 @@ import Intelligence from './pages/Intelligence';
 import Search from './pages/Search';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
+import Documents from './pages/Documents';
+import InsightsEngine from './pages/InsightsEngine';
+import DeltaAudit from './pages/DeltaAudit';
+import EntityGraph from './pages/EntityGraph';
+import ComplianceVault from './pages/ComplianceVault';
+import SynapseHub from './pages/SynapseHub';
 import { Loader } from './components/ui/Loader';
-import { processMeetingAudio, semanticSearch } from './services/geminiService';
+import { processMeetingAudio, processMeetingReport, semanticSearch } from './services/geminiService';
+
+import { Scene3D } from './components/ui/Scene3D';
+import { AICompanion } from './components/ui/AICompanion';
+
+import { Menu } from 'lucide-react';
 
 const AppContent: React.FC = () => {
   const { user, logout, loading: authLoading } = useAuthContext();
@@ -26,6 +37,7 @@ const AppContent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isSidebarOpenOnMobile, setIsSidebarOpenOnMobile] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('echo_meetings');
@@ -44,6 +56,12 @@ const AppContent: React.FC = () => {
     }
   }, [meetings]);
 
+  useEffect(() => {
+    if (user && viewState === 'auth') {
+      setViewState('dashboard');
+    }
+  }, [user, viewState]);
+
   const activeMeeting = meetings.find(m => m.id === activeMeetingId);
 
   const handleLogout = async () => {
@@ -60,7 +78,7 @@ const AppContent: React.FC = () => {
       setProcessingStep('AI is summarizing your meeting...');
       const result = await processMeetingAudio(audioBase64, mimeType);
       
-      const newId = `m-${Date.now()}`;
+      const newId = result.id;
       const newMeeting: Meeting = {
         id: newId,
         team_id: 't1',
@@ -70,7 +88,8 @@ const AppContent: React.FC = () => {
         created_at: new Date().toISOString(),
         segments: result.segments,
         action_items: result.actionItems,
-        decisions: result.decisions
+        decisions: result.decisions,
+        summarySpeechBase64: result.summarySpeechBase64
       };
 
       setMeetings(prev => [newMeeting, ...prev]);
@@ -78,6 +97,35 @@ const AppContent: React.FC = () => {
       setViewState('meeting');
     } catch (err) {
       alert("The AI analysis failed. Please try a shorter recording.");
+    } finally {
+      setProcessingStep(null);
+    }
+  };
+
+  const handleReportComplete = async (reportText: string) => {
+    try {
+      setProcessingStep('AI is parsing your meeting report...');
+      const result = await processMeetingReport(reportText);
+      
+      const newId = result.id;
+      const newMeeting: Meeting = {
+        id: newId,
+        team_id: 't1',
+        title: `Report Ingestion — ${new Date().toLocaleTimeString()}`,
+        start_time: new Date().toISOString(),
+        created_by: user?.name || 'User',
+        created_at: new Date().toISOString(),
+        segments: result.segments,
+        action_items: result.actionItems,
+        decisions: result.decisions,
+        summarySpeechBase64: result.summarySpeechBase64
+      };
+
+      setMeetings(prev => [newMeeting, ...prev]);
+      setActiveMeetingId(newId);
+      setViewState('meeting');
+    } catch (err) {
+      alert("The AI analysis failed. Please try a shorter report.");
     } finally {
       setProcessingStep(null);
     }
@@ -121,73 +169,105 @@ const AppContent: React.FC = () => {
     return <Loader message="Verifying Identity..." fullScreen />;
   }
 
-  if (!user) {
-    if (viewState === 'auth') {
-      return <Login onLogin={() => setViewState('dashboard')} />;
-    }
-    return <LandingPage onNavigate={(path) => setViewState(path === '/login' ? 'auth' : 'dashboard')} />;
-  }
-
   return (
-    <div className={`flex min-h-screen ${theme === 'dark' ? 'bg-obsidian' : 'bg-gray-50'}`}>
-      <Sidebar 
-        user={user} 
-        viewState={viewState} 
-        setViewState={setViewState} 
-        onLogout={handleLogout} 
-      />
-      <main className="flex-1 ml-72 p-12 max-w-7xl mx-auto w-full relative">
-        {processingStep && <Loader message={processingStep} fullScreen />}
-        <div className="animate-in fade-in duration-500">
-          {viewState === 'dashboard' && (
-            <Dashboard 
-              meetings={meetings} 
-              onSelectMeeting={(id) => { setActiveMeetingId(id); setViewState('meeting'); }}
-              onDeleteMeeting={handleDeleteMeeting}
-              onInitiateCapture={() => setViewState('create')}
+    <div className="flex min-h-screen bg-[#02040e] text-crystal overflow-hidden relative">
+      <Scene3D />
+      <div className="relative z-10 w-full min-h-screen">
+        {!user ? (
+          viewState === 'auth' ? (
+            <Login onLogin={() => setViewState('dashboard')} />
+          ) : viewState === 'documents' ? (
+            <Documents onBack={() => setViewState('dashboard')} />
+          ) : (
+            <LandingPage onNavigate={(path) => setViewState(path === '/login' ? 'auth' : path === 'documents' ? 'documents' : 'dashboard')} />
+          )
+        ) : (
+          <div className="flex min-h-screen bg-transparent">
+            <AICompanion />
+            <Sidebar 
+              user={user} 
+              viewState={viewState} 
+              setViewState={setViewState} 
+              onLogout={handleLogout} 
+              isMobileOpen={isSidebarOpenOnMobile}
+              onMobileClose={() => setIsSidebarOpenOnMobile(false)}
             />
-          )}
+            {/* Mobile Top Navigation Header */}
+            <div className="fixed top-0 left-0 right-0 h-16 bg-black/80 backdrop-blur-md border-b border-white/10 z-20 flex items-center px-6 md:hidden justify-between">
+              <span className="text-sm font-mono font-black text-white uppercase tracking-widest">ECHO SYSTEM</span>
+              <button 
+                onClick={() => setIsSidebarOpenOnMobile(true)}
+                className="p-2 rounded-lg text-white hover:bg-white/5 border border-white/10"
+              >
+                <Menu className="w-5 h-5 text-[#39FF14]" />
+              </button>
+            </div>
 
-          {viewState === 'create' && (
-            <CreateMeeting onRecordingComplete={handleRecordingComplete} isProcessing={!!processingStep} />
-          )}
+            <main className="flex-1 ml-0 md:ml-20 p-6 pt-24 sm:p-12 sm:pt-12 max-w-7xl mx-auto w-full relative h-screen overflow-y-auto no-scrollbar bg-transparent transition-all duration-300">
+              {processingStep && <Loader message={processingStep} fullScreen />}
+              <div className="animate-in fade-in duration-500">
+                {(viewState === 'dashboard' || viewState === 'auth') && (
+                  <Dashboard 
+                    meetings={meetings} 
+                    onSelectMeeting={(id) => { setActiveMeetingId(id); setViewState('meeting'); }}
+                    onDeleteMeeting={handleDeleteMeeting}
+                    onInitiateCapture={() => setViewState('create')}
+                  />
+                )}
 
-          {viewState === 'meeting' && (
-            activeMeeting ? (
-              <MeetingDetail 
-                meeting={activeMeeting} 
-                onBack={() => setViewState('dashboard')} 
-                highlightedSegmentId={null}
-                onJumpToSegment={jumpToSegment}
-                onUpdateMeeting={handleUpdateMeeting}
-              />
-            ) : <Dashboard 
-                  meetings={meetings} 
-                  onSelectMeeting={(id) => { setActiveMeetingId(id); setViewState('meeting'); }}
-                  onDeleteMeeting={handleDeleteMeeting}
-                  onInitiateCapture={() => setViewState('create')}
-                />
-          )}
+                {viewState === 'create' && (
+                  <CreateMeeting 
+                    onRecordingComplete={handleRecordingComplete} 
+                    onReportComplete={handleReportComplete}
+                    isProcessing={!!processingStep} 
+                  />
+                )}
 
-          {viewState === 'intelligence' && (
-            <Intelligence meetings={meetings} onJumpToSegment={jumpToSegment} />
-          )}
+                {viewState === 'meeting' && (
+                  activeMeeting ? (
+                    <MeetingDetail 
+                      meeting={activeMeeting} 
+                      onBack={() => setViewState('dashboard')} 
+                      highlightedSegmentId={null}
+                      onJumpToSegment={jumpToSegment}
+                      onUpdateMeeting={handleUpdateMeeting}
+                    />
+                  ) : <Dashboard 
+                        meetings={meetings} 
+                        onSelectMeeting={(id) => { setActiveMeetingId(id); setViewState('meeting'); }}
+                        onDeleteMeeting={handleDeleteMeeting}
+                        onInitiateCapture={() => setViewState('create')}
+                      />
+                )}
 
-          {viewState === 'search' && (
-            <Search 
-              query={searchQuery} 
-              results={searchResults} 
-              isSearching={isSearching} 
-              onSearch={handleSearch} 
-              onJumpToSegment={jumpToSegment}
-              meetings={meetings}
-            />
-          )}
+                {viewState === 'intelligence' && (
+                  <Intelligence meetings={meetings} onJumpToSegment={jumpToSegment} />
+                )}
 
-          {viewState === 'profile' && <Profile user={user} />}
-          {viewState === 'admin' && <Admin meetingsCount={meetings.length} />}
-        </div>
-      </main>
+                {viewState === 'search' && (
+                  <Search 
+                    query={searchQuery} 
+                    results={searchResults} 
+                    isSearching={isSearching} 
+                    onSearch={handleSearch} 
+                    onJumpToSegment={jumpToSegment}
+                    meetings={meetings}
+                  />
+                )}
+
+                {viewState === 'profile' && <Profile user={user} />}
+                {viewState === 'admin' && <Admin meetingsCount={meetings.length} />}
+                {viewState === 'documents' && <Documents onBack={() => setViewState('dashboard')} />}
+                {viewState === 'insights' && <InsightsEngine meetings={meetings} />}
+                {viewState === 'delta-audit' && <DeltaAudit meetings={meetings} />}
+                {viewState === 'entity-graph' && <EntityGraph meetings={meetings} />}
+                {viewState === 'compliance-vault' && <ComplianceVault meetings={meetings} />}
+                {viewState === 'synapse-hub' && <SynapseHub />}
+              </div>
+            </main>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

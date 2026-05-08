@@ -34,6 +34,7 @@ export interface Meeting {
   segments: TranscriptSegment[];
   action_items: ActionItem[];
   decisions: Decision[];
+  summarySpeechBase64?: string;
 }
 
-export type ViewState = 'auth' | 'dashboard' | 'meeting' | 'search' | 'intelligence' | 'profile' | 'admin' | 'create';
+export type ViewState = 'auth' | 'dashboard' | 'meeting' | 'search' | 'intelligence' | 'profile' | 'admin' | 'create' | 'documents' | 'insights' | 'delta-audit' | 'entity-graph' | 'compliance-vault' | 'synapse-hub';

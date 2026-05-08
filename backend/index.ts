@@ -1,14 +1,20 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import meetingsRoutes from './routes/meetings.routes';
 import searchRoutes from './routes/search.routes';
 import adminRoutes from './routes/admin.routes';
 import logsRoutes from './src/routes/logs.routes';
 import configRoutes from './src/routes/config.routes';
+import authRoutes from './src/routes/auth.routes';
+import { connectDB } from './src/config/database';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+// Connect to MongoDB using Mongoose
+connectDB();
 
 const app = express();
 
@@ -25,6 +31,7 @@ app.use(express.json({ limit: '50mb' }));
 
 // Route Registration with logs
 app.use('/api/logs', logsRoutes);
+app.use('/api/auth', authRoutes);
 
 // Configuration routes - serves Firebase and other configs from database
 app.use('/api/config', configRoutes);

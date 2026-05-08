@@ -8,6 +8,7 @@ const controller = new MeetingsController();
 
 router.get('/', authMiddleware, controller.getAll);
 router.post('/ingest', authMiddleware, controller.ingest);
+router.post('/chat', authMiddleware, controller.chat);
 router.get('/:id', authMiddleware, controller.getOne);
 router.delete('/:id', authMiddleware, controller.purge);
 

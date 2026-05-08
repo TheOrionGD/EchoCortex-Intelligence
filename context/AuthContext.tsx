@@ -1,21 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  onAuthStateChanged, 
-  User, 
-  signOut,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  Auth
-} from 'firebase/auth';
-import { getAuthService, googleProvider } from '../services/firebase.ts';
-import { UserProfile } from '../types/user.ts';
+import { UserProfile } from '../types';
+import { mongoDB } from '../services/mongodbAuthService';
 
 interface AuthContextType {
   user: UserProfile | null;
   setUser: (user: UserProfile | null) => void;
-  firebaseUser: User | null;
+  firebaseUser: any | null; // Kept for backward compatibility
   loading: boolean;
   logout: () => Promise<void>;
   loginWithGoogle: () => Promise<void>;
@@ -26,105 +16,80 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [authService, setAuthService] = useState<Auth | null>(null);
-  const [authError, setAuthError] = useState<string | null>(null);
 
+  // Initialize and check for existing active MongoDB sessions
   useEffect(() => {
-    let isMounted = true;
-    let unsubscribe: (() => void) | null = null;
-
-    const initAuth = async () => {
-      const timeout = setTimeout(() => {
-        if (isMounted && loading) {
-          console.warn("Auth check timed out. Proceeding to landing page.");
-          setLoading(false);
-        }
-      }, 5000);
-
+    const checkActiveSession = () => {
       try {
-        const authServiceInstance = await getAuthService();
-        
-        if (!isMounted) return;
-        
-        setAuthService(authServiceInstance);
-        clearTimeout(timeout);
-
-        // Set up auth listener
-        unsubscribe = onAuthStateChanged(authServiceInstance, (user) => {
-          if (!isMounted) return;
-          
-          setFirebaseUser(user);
-          if (user) {
-            setUserProfile({
-              id: user.uid,
-              name: user.displayName || 'User Node',
-              email: user.email || '',
-              role: 'admin', 
-              avatar: user.displayName?.split(' ').map(n => n[0]).join('') || 'U'
-            });
-          } else {
-            setUserProfile(null);
-          }
-          setLoading(false);
-        }, (error) => {
-          if (isMounted) {
-            console.error("Auth listener error:", error);
-            setAuthError("Failed to initialize authentication");
-            setLoading(false);
-          }
-        });
-      } catch (error) {
-        if (isMounted) {
-          const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-          console.error("[Firebase] Auth initialization error:", errorMsg);
-          setAuthError("Firebase is not available. Using offline mode.");
-          setLoading(false);
+        const cachedSession = localStorage.getItem('mongodb_active_session');
+        if (cachedSession) {
+          setUserProfile(JSON.parse(cachedSession));
         }
+      } catch (err) {
+        console.error("Failed to load MongoDB active session:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    initAuth();
-
-    return () => {
-      isMounted = false;
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
+    checkActiveSession();
   }, []);
 
-  const loginWithGoogle = async () => {
-    if (!authService) throw new Error("Auth unavailable");
-    await signInWithPopup(authService, googleProvider);
-  };
-
   const loginWithEmail = async (email: string, pass: string) => {
-    if (!authService) throw new Error("Auth unavailable");
-    await signInWithEmailAndPassword(authService, email, pass);
+    setLoading(true);
+    try {
+      const dbUser = await mongoDB.findUserByEmailAndAuth(email, pass);
+      
+      const activeProfile: UserProfile = {
+        id: dbUser._id,
+        name: dbUser.name,
+        email: dbUser.email,
+        role: dbUser.role as "admin" | "member" | "viewer",
+        avatar: dbUser.avatar
+      };
+
+      setUserProfile(activeProfile);
+      localStorage.setItem('mongodb_active_session', JSON.stringify(activeProfile));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const signUpWithEmail = async (email: string, pass: string, name: string) => {
-    if (!authService) throw new Error("Auth unavailable");
-    const cred = await createUserWithEmailAndPassword(authService, email, pass);
-    await updateProfile(cred.user, { displayName: name });
+    setLoading(true);
+    try {
+      const newDbUser = await mongoDB.createUser(name, email, pass);
+      const activeProfile: UserProfile = {
+        id: newDbUser._id,
+        name: newDbUser.name,
+        email: newDbUser.email,
+        role: newDbUser.role as "admin" | "member" | "viewer",
+        avatar: newDbUser.avatar
+      };
+
+      setUserProfile(activeProfile);
+      localStorage.setItem('mongodb_active_session', JSON.stringify(activeProfile));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loginWithGoogle = async () => {
+    throw new Error("OAuth Google login is currently disabled. Please authenticate securely via MongoDB Credentials.");
   };
 
   const logout = async () => {
-    if (!authService) {
-      setUserProfile(null);
-      return;
-    }
-    await signOut(authService);
+    setUserProfile(null);
+    localStorage.removeItem('mongodb_active_session');
   };
 
   return (
     <AuthContext.Provider value={{ 
       user: userProfile, 
       setUser: setUserProfile,
-      firebaseUser, 
+      firebaseUser: null, // Always null in MongoDB mode
       loading, 
       logout, 
       loginWithGoogle,
@@ -141,3 +106,4 @@ export const useAuthContext = () => {
   if (!context) throw new Error("useAuthContext must be used within AuthProvider");
   return context;
 };
+export default AuthContext;

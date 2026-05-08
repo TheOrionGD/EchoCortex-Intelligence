@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { TranscriptSegment } from '../../types';
 
 interface TimelineProps {
@@ -27,52 +28,57 @@ const TranscriptTimeline: React.FC<TimelineProps> = ({ segments, onSeek, current
   }, [highlightedSegmentId]);
 
   return (
-    <div className="w-full bg-obsidian border border-zinc-900">
+    <div className="w-full bg-obsidian/50 border border-slate/50 rounded-xl overflow-hidden backdrop-blur-md">
       {segments.map((segment, idx) => {
         const isActive = currentTime >= segment.start_time && currentTime <= segment.end_time;
         const isTarget = highlightedSegmentId === segment.id;
         
         return (
-          <div 
+          <motion.div 
+            whileHover={{ backgroundColor: "rgba(31, 41, 55, 0.4)" }}
             key={segment.id} 
             ref={el => { segmentRefs.current[segment.id] = el; }}
             onClick={() => onSeek(segment.start_time)}
-            className={`flex items-start group cursor-pointer transition-all duration-200 border-b border-zinc-900/50 ${
+            className={`flex items-start group cursor-pointer transition-all duration-300 border-b border-slate/30 relative overflow-hidden ${
               isActive 
-                ? 'bg-carbon' 
+                ? 'bg-cyan/5' 
                 : isTarget 
-                  ? 'bg-accent/5' 
-                  : 'hover:bg-zinc-900/30'
+                  ? 'bg-violet/10 border-violet/30' 
+                  : 'bg-transparent'
             }`}
           >
-            <div className="w-24 flex-shrink-0 flex flex-col items-center py-6 border-r border-zinc-900 relative">
-              <div className={`text-[10px] font-mono tracking-tighter mb-1 transition-colors ${isActive ? 'text-accent' : 'text-zinc-600'}`}>
+            {isActive && (
+              <div className="absolute left-0 top-0 w-1 h-full bg-cyan shadow-[0_0_15px_rgba(0,240,255,1)]" />
+            )}
+            
+            <div className="w-24 flex-shrink-0 flex flex-col items-center py-6 border-r border-slate/30 relative">
+              <div className={`text-[10px] font-space tracking-widest mb-1 transition-colors ${isActive ? 'text-cyan font-bold text-glow-cyan' : 'text-slate'}`}>
                 {formatTime(segment.start_time)}
               </div>
-              <div className={`w-0.5 h-full absolute bottom-0 bg-zinc-900 ${idx === segments.length - 1 ? 'hidden' : ''}`} />
-              <div className={`w-2 h-2 rounded-full absolute top-[1.6rem] border-2 bg-obsidian z-10 ${isActive ? 'border-accent scale-150 shadow-[0_0_10px_rgba(79,70,229,0.5)]' : 'border-zinc-800'}`} />
+              <div className={`w-[1px] h-full absolute bottom-0 bg-slate/30 ${idx === segments.length - 1 ? 'hidden' : ''}`} />
+              <div className={`w-2.5 h-2.5 rounded-full absolute top-[1.6rem] border-2 bg-obsidian z-10 transition-all ${isActive ? 'border-cyan scale-125 shadow-neon-cyan' : 'border-slate/50'}`} />
             </div>
 
             <div className="flex-1 py-6 px-10">
               <div className="flex items-center gap-4 mb-2">
-                <span className={`text-[9px] font-black uppercase tracking-[0.3em] transition-colors ${isActive ? 'text-stark' : 'text-zinc-600'}`}>
+                <span className={`text-[9px] font-space font-black uppercase tracking-[0.3em] transition-colors ${isActive ? 'text-crystal' : 'text-slate'}`}>
                   {segment.speaker}
                 </span>
                 {isActive && (
-                  <div className="flex gap-0.5">
-                    <div className="w-1 h-2 bg-accent animate-pulse" />
-                    <div className="w-1 h-3 bg-accent animate-pulse delay-75" />
-                    <div className="w-1 h-2 bg-accent animate-pulse delay-150" />
+                  <div className="flex gap-1">
+                    <div className="w-1.5 h-2 bg-cyan shadow-neon-cyan animate-pulse" />
+                    <div className="w-1.5 h-3 bg-cyan shadow-neon-cyan animate-pulse delay-75" />
+                    <div className="w-1.5 h-2 bg-cyan shadow-neon-cyan animate-pulse delay-150" />
                   </div>
                 )}
               </div>
-              <p className={`text-[14px] leading-relaxed font-medium transition-colors ${
-                isActive ? 'text-stark' : 'text-zinc-500 group-hover:text-zinc-400'
+              <p className={`text-[13px] leading-relaxed font-inter transition-colors ${
+                isActive ? 'text-crystal' : 'text-silver group-hover:text-crystal'
               }`}>
                 {segment.text}
               </p>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

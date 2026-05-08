@@ -1,36 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  BrainCircuit, 
-  Mail, 
-  Lock, 
-  Phone, 
-  Key, 
-  Loader2, 
+import {
+  Database,
+  Mail,
+  Lock,
+  User,
+  Loader2,
   AlertCircle,
   ShieldCheck,
+  Sparkles,
   Chrome,
-  Sun,
-  Moon
+  Facebook
 } from 'lucide-react';
-import { 
-  RecaptchaVerifier, 
-  signInWithPhoneNumber, 
-  ConfirmationResult 
-} from 'firebase/auth';
-import { auth } from '../services/firebase.ts';
 import { useAuthContext } from '../context/AuthContext.tsx';
 import { useTheme } from '../context/ThemeContext';
-import { Button } from '../components/ui/Button.tsx';
-import { Input } from '../components/ui/Input.tsx';
 
 interface LoginProps {
   onLogin: () => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const { loginWithGoogle, loginWithEmail, signUpWithEmail, user } = useAuthContext();
-  const { theme, toggleTheme } = useTheme();
-  const [mode, setMode] = useState<'email' | 'otp'>('email');
+  const { loginWithEmail, signUpWithEmail, user } = useAuthContext();
+  const { theme } = useTheme();
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,260 +29,205 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [profileIcon, setProfileIcon] = useState('');
+
+  // Clock state
+  const [timeStr, setTimeStr] = useState('Echo 1:48 PM');
 
   useEffect(() => {
     if (user) {
-      onLogin(); 
+      onLogin();
     }
   }, [user, onLogin]);
 
-  const handleEmailAuth = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      setTimeStr(`Echo ${hours}:${minutes} ${ampm}`);
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleMongoAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     try {
       if (isSignUp) {
-        await signUpWithEmail(email, password, username);
+        await signUpWithEmail(email, password, username || 'Anonymous Commander');
+        if (profileIcon) {
+          localStorage.setItem('echo_user_avatar', profileIcon);
+          window.dispatchEvent(new Event('echo_avatar_updated'));
+        }
       } else {
         await loginWithEmail(email, password);
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed. Verify credentials.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleAuth = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      await loginWithGoogle();
-    } catch (err: any) {
-      setError(err.message || 'Google proxy authentication failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const setupRecaptcha = () => {
-    if (!(window as any).recaptchaVerifier) {
-      (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-      });
-    }
-  };
-
-  const handleSendOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      setupRecaptcha();
-      const verifier = (window as any).recaptchaVerifier;
-      const result = await signInWithPhoneNumber(auth, phone, verifier);
-      setConfirmationResult(result);
-    } catch (err: any) {
-      setError(err.message || 'Failed to transmit secure code.');
-      if ((window as any).recaptchaVerifier) {
-        (window as any).recaptchaVerifier.clear();
-        (window as any).recaptchaVerifier = null;
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!confirmationResult) return;
-    setLoading(true);
-    setError(null);
-    try {
-      await confirmationResult.confirm(otp);
-    } catch (err: any) {
-      setError('Invalid OTP code detected.');
+      setError(err.message || 'Authentication failed. Please verify credentials.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-obsidian text-zinc-400' : 'bg-white text-gray-900'} flex flex-col items-center justify-center p-6 font-sans relative overflow-hidden`}>
-      {/* Theme Toggle */}
-      <button 
-        onClick={toggleTheme}
-        className={`absolute top-6 right-6 p-3 rounded-lg transition-colors z-10 ${theme === 'dark' ? 'hover:bg-zinc-800 text-zinc-400' : 'hover:bg-gray-100 text-gray-600'}`}
-        aria-label="Toggle theme"
-      >
-        {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-      </button>
-      
-      <div id="recaptcha-container"></div>
-      
-      {/* Dynamic Background Elements */}
-      <div className={`absolute top-[-10%] right-[-10%] w-[500px] h-[500px] ${theme === 'dark' ? 'bg-accent/5' : 'bg-blue-100/50'} blur-[120px] rounded-full pointer-events-none`}></div>
-      <div className={`absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] ${theme === 'dark' ? 'bg-accent/3' : 'bg-blue-50/30'} blur-[100px] rounded-full pointer-events-none`}></div>
+    <div className="min-h-screen bg-transparent text-white flex items-center justify-center p-4 sm:p-10 font-sans relative overflow-hidden w-full">
+      {/* Background Decorative Mesh */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(139,92,246,0.05)_0%,transparent_50%)] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-md space-y-10 z-10 animate-in fade-in slide-in-from-bottom-6 duration-1000">
-        {/* Institutional Branding */}
-        <div className="text-center space-y-4">
-          <div className={`inline-flex p-5 border rounded mb-2 relative group backdrop-blur-sm ${theme === 'dark' ? 'border-zinc-800 bg-zinc-900/40' : 'border-gray-300 bg-white/40'}`}>
-            <BrainCircuit className={`w-12 h-12 group-hover:scale-110 transition-transform duration-500 ${theme === 'dark' ? 'text-stark' : 'text-gray-900'}`} />
+      {/* Main Split Glass Panel Container */}
+      <div className="w-full max-w-6xl bg-black/40 border border-white/10 rounded-3xl p-6 lg:p-8 grid lg:grid-cols-12 gap-8 relative z-10 backdrop-blur-md shadow-2xl">
+
+        {/* Left Side: Login Form (Col span 5) */}
+        <div className="lg:col-span-5 flex flex-col justify-between py-4 px-2 space-y-8">
+
+          {/* Logo / Brand Header */}
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Echo Logo" className="w-10 h-10 object-contain rounded-xl" />
+            <span className="font-mono font-black tracking-widest text-lg text-white">ECHO</span>
           </div>
-          <h1 className={`text-4xl font-black tracking-tighter uppercase italic ${theme === 'dark' ? 'text-stark' : 'text-gray-900'}`}>Echo Institutional</h1>
-          <p className={`text-[10px] font-mono uppercase tracking-[0.5em] ${theme === 'dark' ? 'text-zinc-600' : 'text-gray-500'}`}>Secure Node Authentication</p>
-        </div>
 
-        {/* Tab Switcher */}
-        <div className={`flex border p-1 rounded-sm ${theme === 'dark' ? 'bg-zinc-900/50 border-zinc-800' : 'bg-gray-100/50 border-gray-300'}`}>
-          <button 
-            onClick={() => { setMode('email'); setError(null); }}
-            className={`flex-1 py-3 text-[10px] font-mono uppercase tracking-widest transition-all rounded-sm ${mode === 'email' ? (theme === 'dark' ? 'bg-zinc-800 text-stark shadow-lg' : 'bg-white text-gray-900 shadow-lg') : (theme === 'dark' ? 'text-zinc-600 hover:text-zinc-400' : 'text-gray-500 hover:text-gray-700')}`}
-          >
-            Terminal Access
-          </button>
-          <button 
-            onClick={() => { setMode('otp'); setError(null); }}
-            className={`flex-1 py-3 text-[10px] font-mono uppercase tracking-widest transition-all rounded-sm ${mode === 'otp' ? (theme === 'dark' ? 'bg-zinc-800 text-stark shadow-lg' : 'bg-white text-gray-900 shadow-lg') : (theme === 'dark' ? 'text-zinc-600 hover:text-zinc-400' : 'text-gray-500 hover:text-gray-700')}`}
-          >
-            Secure Link (OTP)
-          </button>
-        </div>
+          {/* Core Content */}
+          <div className="space-y-6">
 
-        {/* Core Auth Surface */}
-        <div className={`border p-10 space-y-8 shadow-2xl relative overflow-hidden backdrop-blur-md ${theme === 'dark' ? 'bg-carbon border-zinc-900' : 'bg-white border-gray-200'}`}>
-          {error && (
-            <div className={`border p-4 flex gap-3 items-start animate-in slide-in-from-top-2 ${theme === 'dark' ? 'bg-red-500/10 border-red-900/30' : 'bg-red-50 border-red-200'}`}>
-              <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-              <p className={`text-[11px] font-mono leading-relaxed uppercase tracking-tight ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>{error}</p>
-            </div>
-          )}
+            {/* Toggle Mode */}
+            <button
+              type="button"
+              onClick={() => { setIsSignUp(!isSignUp); setError(null); }}
+              className="text-xs font-mono uppercase tracking-widest text-[#8B5CF6] hover:text-[#39FF14] transition-colors flex items-center gap-1 font-bold"
+            >
+              <span>{isSignUp ? 'already have an account?..login' : 'no account..create account'}</span>
+            </button>
 
-          {mode === 'email' ? (
-            <form onSubmit={handleEmailAuth} className="space-y-6">
+            {/* Hook Headline */}
+            <h1 className="text-3xl sm:text-4xl font-mono font-black uppercase tracking-tighter text-white leading-none">
+              Building blocks for all your institutional memory needs
+            </h1>
+
+            {error && (
+              <div className="border border-red-500/30 bg-red-500/10 p-4 rounded-xl flex gap-3 items-start animate-in slide-in-from-top-2">
+                <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                <p className="text-[10px] font-mono leading-relaxed uppercase tracking-tight text-red-400">{error}</p>
+              </div>
+            )}
+
+            {/* Input Form */}
+            <form onSubmit={handleMongoAuth} className="space-y-4 pt-2">
               {isSignUp && (
-                <Input 
-                  label="Node Alias (Display Name)" 
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="e.g. Unit_Alpha"
+                <div className="space-y-1">
+                  <label className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 font-bold block">name</label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="e.g. Orion Pax"
+                    className="w-full bg-[#121212] border border-white/10 rounded-xl px-4 py-3 text-xs font-mono focus:border-[#39FF14]/50 focus:outline-none transition-colors"
+                    required
+                  />
+                </div>
+              )}
+
+              <div className="space-y-1">
+                <label className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 font-bold block">mailid</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="godfrey.prof@gmail.com"
+                  className="w-full bg-[#121212] border border-white/10 rounded-xl px-4 py-3 text-xs font-mono focus:border-[#39FF14]/50 focus:outline-none transition-colors"
                   required
                 />
-              )}
-              <Input 
-                label="System Identifier (Email)" 
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="node@echo-intel.ai"
-                required
-              />
-              <Input 
-                label="Security Token (Password)" 
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
-              
-              <Button 
-                type="submit" 
-                variant="stark" 
-                className="w-full py-5 text-xs font-black"
-                disabled={loading}
-              >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isSignUp ? 'Request Provisioning' : 'Authenticate Identity')}
-              </Button>
-
-              <div className="pt-2 text-center">
-                <button 
-                  type="button"
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  className="text-[10px] font-mono uppercase tracking-widest text-zinc-600 hover:text-accent transition-colors"
-                >
-                  {isSignUp ? 'Existing Node? Return to Terminal' : 'New Identity? Register Node'}
-                </button>
               </div>
-            </form>
-          ) : (
-            <div className="space-y-6">
-              {!confirmationResult ? (
-                <form onSubmit={handleSendOtp} className="space-y-6">
-                  <Input 
-                    label="Mobile Link (International Format)" 
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+15550000000"
-                    required
+
+              <div className="space-y-1">
+                <div className="flex justify-between items-center">
+                  <label className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 font-bold block">password</label>
+                  {!isSignUp && (
+                    <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-600 hover:text-white cursor-pointer transition-colors">Forgotten Password?</span>
+                  )}
+                </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-[#121212] border border-white/10 rounded-xl px-4 py-3 text-xs font-mono focus:border-[#39FF14]/50 focus:outline-none transition-colors"
+                  required
+                />
+              </div>
+
+              {isSignUp && (
+                <div className="space-y-1">
+                  <label className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 font-bold block">profile icon url link</label>
+                  <input
+                    type="url"
+                    value={profileIcon}
+                    onChange={(e) => setProfileIcon(e.target.value)}
+                    placeholder="e.g. https://domain.com/avatar.jpg"
+                    className="w-full bg-[#121212] border border-white/10 rounded-xl px-4 py-3 text-xs font-mono focus:border-[#39FF14]/50 focus:outline-none transition-colors"
                   />
-                  <Button 
-                    type="submit" 
-                    variant="stark" 
-                    className="w-full py-5 text-xs font-black"
-                    disabled={loading}
-                  >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Transmit Verification'}
-                  </Button>
-                </form>
-              ) : (
-                <form onSubmit={handleVerifyOtp} className="space-y-6">
-                  <Input 
-                    label="6-Digit Authorization Code" 
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="000000"
-                    required
-                  />
-                  <Button 
-                    type="submit" 
-                    variant="stark" 
-                    className="w-full py-5 text-xs font-black"
-                    disabled={loading}
-                  >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Verify Secure Connection'}
-                  </Button>
-                  <button 
-                    type="button"
-                    onClick={() => setConfirmationResult(null)}
-                    className="w-full text-[10px] font-mono uppercase tracking-widest text-zinc-600 hover:text-zinc-400"
-                  >
-                    Recalibrate (Resend Code)
-                  </button>
-                </form>
+                </div>
               )}
+
+              {/* Action Buttons */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#8B5CF6] hover:bg-[#7c4ee4] text-white py-3.5 px-4 rounded-xl text-xs font-mono font-bold uppercase tracking-widest transition-all duration-300 shadow-[0_4px_20px_rgba(139,92,246,0.3)] mt-2"
+              >
+                {loading ? (
+                  <span className="flex items-center gap-2 justify-center">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Executing...
+                  </span>
+                ) : (
+                  isSignUp ? 'Create Account' : 'Login'
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Right Side: Stunning Neural Lattice Network Directory (Col span 7) */}
+        <div className="lg:col-span-7 h-[400px] lg:h-[650px] rounded-2xl relative overflow-hidden bg-black/60 shadow-inner flex items-center justify-center border border-white/10">
+          {/* Main Background Image - Neural Lattice Network */}
+          <img
+            src="/echo_neural_network_login.png"
+            alt="Futuristic Neural Lattice Network Directory"
+            className="absolute inset-0 w-full h-full object-cover opacity-85 mix-blend-lighten select-none pointer-events-none"
+          />
+
+          {/* Dark Overlay gradient */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.6)_100%)]" />
+
+          {/* Floating Time Stamp Widget */}
+          <div className="absolute top-6 left-6 px-4 py-2 bg-black/60 backdrop-blur-md rounded-xl border border-white/10 text-[10px] font-mono text-[#39FF14]">
+            {timeStr}
+          </div>
+
+          {/* Floating Menu Button Widget */}
+          <div className="absolute top-6 right-6 flex items-center gap-3">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 font-bold">Welcome</span>
+            <div className="w-8 h-8 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 flex flex-wrap p-2 gap-[2px] items-center justify-center cursor-pointer hover:bg-white/10 transition-all">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#39FF14]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#39FF14]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#39FF14]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#39FF14]" />
             </div>
-          )}
-
-          <div className="relative py-4">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-zinc-800"></div></div>
-            <div className="relative flex justify-center"><span className="bg-carbon px-4 text-[9px] font-mono text-zinc-700 uppercase tracking-[0.4em]">Protocol Proxy</span></div>
           </div>
 
-          <button 
-            onClick={handleGoogleAuth}
-            disabled={loading}
-            className="w-full py-4 bg-zinc-900/60 border border-zinc-800 text-stark text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-zinc-800 hover:border-zinc-700 transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
-          >
-            <Chrome className="w-4 h-4 text-accent" />
-            Authenticate via Intelligence Proxy
-          </button>
+          {/* Glowing Lens Flare Overlay */}
+          <div className="absolute bottom-12 right-12 w-48 h-48 bg-cyan-500/20 rounded-full blur-[80px]" />
+          <div className="absolute top-1/3 left-1/3 w-32 h-32 bg-[#8B5CF6]/20 rounded-full blur-[60px]" />
         </div>
 
-        <div className="text-center space-y-6">
-          <div className="flex items-center justify-center gap-3 text-zinc-700">
-            <ShieldCheck className="w-4 h-4" />
-            <span className="text-[9px] font-mono uppercase tracking-[0.4em]">End-to-End Cryptography Active</span>
-          </div>
-          <p className="text-[11px] font-serif italic leading-relaxed opacity-50 max-w-[280px] mx-auto text-zinc-500">
-            "Echo transforms spoken artifacts into immutable institutional intelligence."
-          </p>
-        </div>
       </div>
     </div>
   );

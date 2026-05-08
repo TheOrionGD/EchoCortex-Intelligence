@@ -93,61 +93,65 @@ const AudioRecorder: React.FC<RecorderProps> = ({ onRecordingComplete, isProcess
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-12">
+    <div className="flex flex-col items-center justify-center space-y-8 w-full">
       {isAnyProcessing ? (
-        <div className="flex flex-col items-center justify-center py-20">
-          <div className="relative mb-12">
-            <Loader2 className="w-16 h-16 text-accent animate-spin" />
+        <div className="flex flex-col items-center justify-center py-10">
+          <div className="relative mb-8">
+            <Loader2 className="w-12 h-12 text-[#00FF41] animate-spin" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Activity className="w-6 h-6 text-accent animate-pulse" />
+              <Activity className="w-4 h-4 text-[#00FF41] animate-pulse" />
             </div>
           </div>
-          <div className="text-center space-y-4">
-            <p className="text-stark font-bold text-sm tracking-widest uppercase">Analyzing Meeting</p>
+          <div className="text-center space-y-2">
+            <p className="text-white font-mono font-bold text-[11px] tracking-widest uppercase">Analyzing Meeting</p>
             <p className="text-zinc-600 font-mono text-[9px] uppercase tracking-[0.4em] animate-pulse">Building your summary...</p>
           </div>
         </div>
       ) : isRecording ? (
-        <div className="flex flex-col items-center justify-center">
-          <div className="relative mb-16 h-24 flex items-center gap-1.5">
+        <div className="flex flex-col items-center justify-center w-full">
+          {/* Animated visualizer */}
+          <div className="relative mb-10 h-16 flex items-center justify-center gap-1 w-full max-w-xs">
              {[...Array(16)].map((_, i) => (
-               <div 
-                 key={i} 
-                 className="w-2 bg-accent/60 rounded-full transition-all duration-75" 
-                 style={{ 
-                   height: `${Math.min(100, (audioLevel / 128) * 100 * (0.5 + Math.random() * 0.5))}%`,
-                   opacity: 0.3 + (audioLevel / 255)
-                 }} 
-               />
+                <div 
+                  key={i} 
+                  className="w-1.5 bg-[#00FF41]/60 rounded-full transition-all duration-75" 
+                  style={{ 
+                    height: `${Math.min(100, (audioLevel / 128) * 100 * (0.3 + Math.random() * 0.7))}%`,
+                    opacity: 0.3 + (audioLevel / 255)
+                  }} 
+                />
              ))}
           </div>
           
           <button 
             onClick={stopRecording} 
-            className="group relative px-12 py-5 bg-red-600 text-stark text-[11px] font-black uppercase tracking-[0.4em] transition-all hover:bg-red-500 hover:scale-105 active:scale-95"
+            className="group relative px-8 py-4 bg-red-600 text-white text-[10px] font-mono font-black uppercase tracking-[0.4em] transition-all hover:bg-red-500 hover:scale-105 active:scale-95 rounded-full"
           >
-            <div className="absolute -inset-2 border border-red-600/30 group-hover:-inset-3 transition-all duration-300" />
-            <span className="flex items-center gap-3"><Square className="w-4 h-4 fill-current" /> Stop Recording</span>
+            <div className="absolute -inset-1.5 border border-red-600/30 rounded-full group-hover:-inset-2.5 transition-all duration-300" />
+            <span className="flex items-center gap-2.5 relative z-10"><Square className="w-3.5 h-3.5 fill-current" /> Stop Recording</span>
           </button>
           
-          <div className="mt-8 flex items-center gap-3">
+          <div className="mt-6 flex items-center gap-2.5">
             <div className="w-1.5 h-1.5 bg-red-600 animate-pulse rounded-full" />
-            <span className="text-zinc-700 font-mono text-[9px] uppercase tracking-widest">Recording in progress</span>
+            <span className="text-zinc-500 font-mono text-[9px] uppercase tracking-widest">Recording in progress</span>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-10">
-          <div className="w-32 h-32 bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-16 group transition-all duration-500 hover:border-accent hover:shadow-[0_0_40px_rgba(79,70,229,0.1)]">
-            <Mic className="w-10 h-10 text-zinc-700 group-hover:text-accent transition-colors" />
+        <div className="flex flex-col items-center justify-center w-full">
+          <div className="w-20 h-20 rounded-full bg-black/40 border border-white/10 flex items-center justify-center mb-8 group transition-all duration-500 hover:border-[#00FF41] hover:shadow-[0_0_30px_rgba(0,255,65,0.1)]">
+            <Mic className="w-8 h-8 text-zinc-500 group-hover:text-[#00FF41] transition-colors" />
           </div>
           <button 
             onClick={startRecording} 
-            className="group relative px-12 py-5 bg-stark text-obsidian text-[11px] font-black uppercase tracking-[0.4em] transition-all hover:scale-105 active:scale-95"
+            className="group relative px-8 py-4 bg-[#00FF41] text-black text-[10px] font-mono font-black uppercase tracking-[0.4em] transition-all hover:scale-105 active:scale-95 rounded-full"
+            style={{
+              boxShadow: '0 0 20px rgba(0,255,65,0.3)',
+            }}
           >
-            <div className="absolute -inset-2 border border-stark/20 group-hover:-inset-3 transition-all duration-300" />
-            Start Meeting
+            <div className="absolute -inset-1.5 border border-[#00FF41]/20 rounded-full group-hover:-inset-2.5 transition-all duration-300 pointer-events-none" />
+            <span className="relative z-10">Start Meeting</span>
           </button>
-          <p className="mt-10 text-zinc-800 font-mono text-[9px] uppercase tracking-[0.4em]">Click to start capturing audio</p>
+          <p className="mt-6 text-zinc-500 font-mono text-[9px] uppercase tracking-[0.3em] text-center">Click to start capturing audio</p>
         </div>
       )}
     </div>

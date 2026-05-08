@@ -1,3 +1,4 @@
+# Verified Echo Institutional Ingestions .gitignore
 # Local environment variables
 .env
 .env.local
@@ -107,7 +108,7 @@ jspm_packages/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
-
+.js
 # yarn v2
 .yarn/cache
 .yarn/unplugged
