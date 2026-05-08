@@ -266,15 +266,15 @@ MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.m78vuqq.mongodb.net/ech
 DATABASE_URL=postgresql://postgres:<password>@db.supabase.co:5432/postgres
 
 # Hugging Face Inference Tokens (Whisper + Sentence Transformers)
-HF_TOKEN=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
+HF_TOKEN=hf_**
 
 # LLM Ingestion Layer API Tokens
-GROQ_API_LLM=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
+GROQ_API_LLM=gsk_**
 GROQ_MODEL=llama-3.1-8b-instant
 
 # Gemini Conversational Recall Engine Token
-GEMINI_API_LLM=AIzaSyAYfihj4mgecCfidY1gchpicFf1zkVeM5Y
-VITE_API_KEY=AIzaSyAYfihj4mgecCfidY1gchpicFf1zkVeM5Y
+GEMINI_API_LLM=AIz**
+
 VITE_API_URL=http://localhost:2348
 ```
 
