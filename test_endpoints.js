@@ -5,8 +5,8 @@ async function runTests() {
   console.log('====================================================');
 
   const defaultUser = {
-    name: 'Sarah Jenkins',
-    email: 's.jenkins@echo-intel.ai',
+    name: 'ABDUL RAZEEK',
+    email: 'abdul.razeek@echo-intel.ai',
     password: 'password'
   };
 

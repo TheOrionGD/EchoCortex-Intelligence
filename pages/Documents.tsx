@@ -305,7 +305,7 @@ export const Documents: React.FC<DocumentsProps> = ({ onBack, initialSection }) 
                     </div>
                     <div className="flex justify-between w-full">
                       <div className="px-4 py-2 rounded border border-[#8B5CF6] bg-[#8B5CF6]/10 text-[10px] font-mono uppercase">
-                        Owner: Sarah Jenkins
+                        Owner: ABDUL RAZEEK
                       </div>
                       <div className="px-4 py-2 rounded border border-[#00e5ff] bg-[#00e5ff]/10 text-[10px] font-mono uppercase">
                         Decision: Move to MongoDB Atlas

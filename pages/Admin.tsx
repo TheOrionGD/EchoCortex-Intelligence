@@ -35,7 +35,8 @@ const SYSTEM_TREE: FileNode = {
           name: 'public',
           type: 'folder',
           children: [
-            { name: 'favicon.svg', type: 'file' },
+            { name: 'favicon.png', type: 'file' },
+            { name: 'logo.png', type: 'file' },
             { name: 'robots.txt', type: 'file' },
           ]
         },
@@ -323,9 +324,10 @@ const FileTreeItem: React.FC<{ node: FileNode; depth: number }> = ({ node, depth
 
 const Admin: React.FC<AdminProps> = ({ meetingsCount }) => {
   const [nodes, setNodes] = useState([
-    { name: 'Sarah Jenkins', role: 'Senior Lead', scope: 'Full', email: 's.jenkins@echo-intel.ai' },
-    { name: 'Robert Miller', role: 'Policy Analyst', scope: 'Scoped', email: 'r.miller@echo-intel.ai' },
-    { name: 'Emma Watson', role: 'DevOps Lead', scope: 'Full', email: 'e.watson@echo-intel.ai' }
+    { name: 'ABDUL RAZEEK', role: 'System Architect', scope: 'Full', email: 'abdul.razeek@echo-intel.ai' },
+    { name: 'GODFREY', role: 'Lead Frontend', scope: 'Full', email: 'godfrey@echo-intel.ai' },
+    { name: 'HARIHAR', role: 'AI Pipeline, Relational', scope: 'Full', email: 'harihar@echo-intel.ai' },
+    { name: 'PRITHIVIRAAJJ', role: 'Security & Governance Specialist', scope: 'Full', email: 'prithiviraajj@echo-intel.ai' }
   ]);
   const [activeTab, setActiveTab] = useState<'governance' | 'structure'>('governance');
 
